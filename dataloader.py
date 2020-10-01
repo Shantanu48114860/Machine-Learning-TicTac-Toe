@@ -1,7 +1,7 @@
 import os
 
 import numpy as np
-import pandas as pd
+#import pandas as pd
 
 from Utils import Utils
 
@@ -33,14 +33,17 @@ class DataLoader:
         np_arr = np.loadtxt(dataset_path)
         np_X = np_arr[:, :9]
         np_Y = np_arr[:, 9:]
+
         print("ps_np_covariates_X: {0}".format(np_X.shape))
         print("ps_np_treatment_Y: {0}".format(np_Y.shape))
 
         np_X_train, np_X_test, np_Y_train, np_Y_test = \
             Utils.test_train_split(np_X, np_Y, split_size)
+
         print("np_covariates_X_train: {0}".format(np_X_train.shape))
         print("np_covariates_Y_train: {0}".format(np_Y_train.shape))
 
         print("np_covariates_X_test: {0}".format(np_X_test.shape))
         print("np_covariates_Y_test: {0}".format(np_Y_test.shape))
+
         return np_X_train, np_X_test, np_Y_train, np_Y_test
