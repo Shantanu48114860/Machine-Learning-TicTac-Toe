@@ -23,7 +23,6 @@ class Regressor:
         k_list = list(range(3, 100))
         y_pred_list = []
         accuracy_threshold_fixed = []
-        accuracy_threshold_mean = []
 
         regressor_dict = self.train_knn(np_x_train, np_y_train, k_list)
 
@@ -34,34 +33,26 @@ class Regressor:
             y_pred_list.append(y_pred)
 
             y_pred_fixed = np.where(y_pred > 0.5, 1, 0)
-            y_pred_mean = np.where(y_pred > np.mean(y_pred), 1, 0)
 
             accuracy_fixed = Utils.get_accuracy_score(np_y_test, y_pred_fixed)
             accuracy_threshold_fixed.append(accuracy_fixed)
             print(accuracy_fixed)
 
-            accuracy_mean = Utils.get_accuracy_score(np_y_test, y_pred_mean)
-            accuracy_threshold_mean.append(accuracy_mean)
-            print(accuracy_mean)
             print("---" * 5)
 
         # Get the k for which there is maximum accuracy
         best_k_fixed = k_list[accuracy_threshold_fixed.index(max(accuracy_threshold_fixed))]
-        best_k_mean = k_list[accuracy_threshold_mean.index(max(accuracy_threshold_mean))]
 
         print("Optimal K for fixed threshold: {0}".format(best_k_fixed))
         print(accuracy_threshold_fixed[accuracy_threshold_fixed.index(max(accuracy_threshold_fixed))])
-
-        print("Optimal K for mean as threshold: {0}".format(best_k_mean))
-        print(accuracy_threshold_mean[accuracy_threshold_mean.index(max(accuracy_threshold_mean))])
 
     def regression_using_mlp(self, np_x_train, np_x_test, np_y_train, np_y_test):
         folds = KFold(n_splits=5, shuffle=True, random_state=1)
         param_grid = [
             {
-                'max_iter': [500, 1000],
+                'max_iter': [1000],
                 'hidden_layer_sizes': [
-                    (200, 200, 9)
+                    (200, 200, 9), (300, 300, 9), (250, 250, 9)
                 ]
             }
         ]
@@ -77,7 +68,7 @@ class Regressor:
         print(clf.best_params_)
 
         best_hyperparams = clf.best_params_
-        learning_rate_init = best_hyperparams["learning_rate_init"]
+        # learning_rate_init = best_hyperparams["learning_rate_init"]
         max_iter = best_hyperparams["max_iter"]
         hidden_layer_sizes = best_hyperparams["hidden_layer_sizes"]
 
@@ -93,11 +84,7 @@ class Regressor:
         y_pred = final_clf.predict(np_x_test)
 
         y_pred_fixed = np.where(y_pred > 0.5, 1, 0)
-        y_pred_mean = np.where(y_pred > np.mean(y_pred), 1, 0)
 
         accuracy_fixed = Utils.get_accuracy_score(np_y_test, y_pred_fixed)
         print("Accuracy linear MLP with fixed threshold: {0}".format(accuracy_fixed))
 
-        accuracy_mean = Utils.get_accuracy_score(np_y_test, y_pred_mean)
-        print("Accuracy linear MLP with mean threshold: {0}".format(accuracy_mean))
-        print("---" * 5)
