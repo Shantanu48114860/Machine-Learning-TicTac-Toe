@@ -10,5 +10,8 @@ class RegressionAlgorithms:
         startRegression = Regressor()
         # startRegression.regression_using_knn(np_x_train, np_x_test, np_y_train, np_y_test)
 
-        startRegression.regression_using_mlp(np_x_train, np_x_test,
+        # startRegression.regression_using_mlp(np_x_train, np_x_test,
+        #                                      np_y_train, np_y_test)
+
+        startRegression.linear_reg(np_x_train, np_x_test,
                                              np_y_train, np_y_test)

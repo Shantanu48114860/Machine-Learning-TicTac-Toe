@@ -52,7 +52,7 @@ class Regressor:
             {
                 'max_iter': [1000],
                 'hidden_layer_sizes': [
-                    (200, 200, 9), (300, 300, 9), (250, 250, 9)
+                    (200, 200, 9), (300, 300, 9)
                 ]
             }
         ]
@@ -72,7 +72,8 @@ class Regressor:
         max_iter = best_hyperparams["max_iter"]
         hidden_layer_sizes = best_hyperparams["hidden_layer_sizes"]
 
-        final_clf = MLPRegressor(random_state=1, max_iter=1000, activation='relu',
+        final_clf = MLPRegressor(random_state=1,
+                                 max_iter=1000, activation='relu',
                                  hidden_layer_sizes=hidden_layer_sizes,
                                  solver='adam')
 
@@ -87,4 +88,22 @@ class Regressor:
 
         accuracy_fixed = Utils.get_accuracy_score(np_y_test, y_pred_fixed)
         print("Accuracy linear MLP with fixed threshold: {0}".format(accuracy_fixed))
+
+    def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
+        X = np_x_train
+        print(np.shape(X))
+
+        Y = np_y_train[:, 0]
+
+        W = np.linalg.inv(X.T @ X) @ X.T @ Y
+        Y_pred = X@W
+        print(np.shape(W))
+
+        print(np.shape(Y_pred))
+        print(np.shape(Y))
+
+        print(Y_pred)
+        print(Y)
+
+
 
