@@ -7,19 +7,13 @@ if __name__ == '__main__':
     # classifier_final_dataset = ML_Algo()
     # classifier_final_dataset.execute_classifier(final_dataset_path, split_size)
     #
-    # print("####" * 20)
-    # print("--> Single class classification move dataset: <--")
-    # final_dataset_path = "datasets-part1/tictac_single.txt"
-    # split_size = 0.8
-    # classifier_final_dataset = ML_Algo()
-    # classifier_final_dataset.execute_classifier(final_dataset_path, split_size)
-
     print("####" * 20)
-    print("--> Multi class classification move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_multi.txt"
+    print("--> Single class classification move dataset: <--")
+    final_dataset_path = "datasets-part1/tictac_single.txt"
     split_size = 0.8
-    multiClass_final_dataset = ML_Algo()
-    multiClass_final_dataset.execute_regressor(final_dataset_path, split_size)
+    classifier_final_dataset = ML_Algo()
+    classifier_final_dataset.execute_classifier(final_dataset_path, split_size)
+
 
 
 

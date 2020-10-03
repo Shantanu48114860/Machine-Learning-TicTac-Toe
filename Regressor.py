@@ -1,9 +1,12 @@
 import numpy as np
+from sklearn.metrics import f1_score
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-
 from Utils import Utils
+
+
+
 
 
 class Regressor:
@@ -90,20 +93,44 @@ class Regressor:
         print("Accuracy linear MLP with fixed threshold: {0}".format(accuracy_fixed))
 
     def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
-        X = np_x_train
-        print(np.shape(X))
+        # X = np.c_[np.ones(np.shape(np_x_train)[0]), np_x_train]
+        # x_t = X.T
+        # W = np.linalg.inv(x_t.dot(X)).dot(x_t).dot(np_y_train)
+        #
+        # x_t = np.c_[np.ones(np.shape(np_x_test)[0]), np_x_test]
+        # Y_pred = np.dot(x_t, W)
 
-        Y = np_y_train[:, 0]
+        Y_pred = np.empty((np.shape(np_y_test)[0], np.shape(np_y_test)[1]))
+        print(np.shape(Y_pred))
 
-        W = np.linalg.inv(X.T @ X) @ X.T @ Y
-        Y_pred = X@W
-        print(np.shape(W))
+        for i in range(9):
+            y = np_y_train[:, i]
+            W = np.linalg.inv(np_x_train.T @ np_x_train) @ np_x_train.T @ y
+            y_pred = np_x_test @ W
+            Y_pred[:, i] = y_pred
 
         print(np.shape(Y_pred))
-        print(np.shape(Y))
-
         print(Y_pred)
-        print(Y)
+        print(np.shape(np_y_test))
+        print(np_y_test)
+
+        # threshold = np.arange(0, 1, 0.001)
+        #
+        # scores = [f1_score(np_y_test, self.to_labels(Y_pred, t), average="weighted")
+        #           for t in threshold]
+        # ix = np.argmax(scores)
+        #
+        # print(ix)
+        # print("Threshold: {0}, F1: {1}".format(threshold[ix], scores[ix]))
+        # Y_thrs = np.where(Y_pred < threshold[ix], 1, 0)
+        # print(Y_thrs)
+        #
+        # print(np_y_test[0])
 
 
 
+        print("Accuracy: {0}".format(Utils.get_accuracy_score(np_y_test, Y_pred)))
+
+    @staticmethod
+    def to_labels(Y_pred, t):
+        return (Y_pred >= t).astype("int")

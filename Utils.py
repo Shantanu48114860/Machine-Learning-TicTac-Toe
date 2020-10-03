@@ -13,5 +13,5 @@ class Utils:
 
     @staticmethod
     def get_accuracy_score(y_true, y_pred):
-        pred_accu = accuracy_score(y_true, y_pred)
+        pred_accu = accuracy_score(y_true, y_pred, normalize=False)
         return pred_accu
