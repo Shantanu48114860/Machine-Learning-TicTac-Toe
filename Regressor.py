@@ -1,12 +1,8 @@
 import numpy as np
-from sklearn.metrics import f1_score
-from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
+
 from Utils import Utils
-
-
-
 
 
 class Regressor:
@@ -23,6 +19,7 @@ class Regressor:
         return dict(zip(k_list, knn_regressors))
 
     def regression_using_knn(self, np_x_train, np_x_test, np_y_train, np_y_test):
+        print("Knn Regression")
         k_list = list(range(3, 100))
         y_pred_list = []
         accuracy_threshold_fixed = []
@@ -47,9 +44,22 @@ class Regressor:
         best_k_fixed = k_list[accuracy_threshold_fixed.index(max(accuracy_threshold_fixed))]
 
         print("Optimal K for fixed threshold: {0}".format(best_k_fixed))
-        print(accuracy_threshold_fixed[accuracy_threshold_fixed.index(max(accuracy_threshold_fixed))])
+        # print(accuracy_threshold_fixed[accuracy_threshold_fixed.index(max(accuracy_threshold_fixed))])
+
+        optimal_knn_classifier = regressor_dict[best_k_fixed]
+        Y_pred = optimal_knn_classifier.predict(np_x_test)
+        Y_pred = (Y_pred >= Y_pred.mean(axis=1, keepdims=1)).astype(float)
+
+        total_acc = np.empty(9)
+        for i in range(9):
+            total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
+                                                    Y_pred[:, i], normalized=False)
+
+        acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
+        print("Accuracy knn: {0}".format(acc))
 
     def regression_using_mlp(self, np_x_train, np_x_test, np_y_train, np_y_test):
+        print(" --->>> MLP Regression")
         folds = KFold(n_splits=5, shuffle=True, random_state=1)
         param_grid = [
             {
@@ -78,30 +88,28 @@ class Regressor:
         final_clf = MLPRegressor(random_state=1,
                                  max_iter=1000, activation='relu',
                                  hidden_layer_sizes=hidden_layer_sizes,
+                                 learning_rate='adaptive',
                                  solver='adam')
 
-        # final_clf = MLPRegressor(random_state=1, max_iter=1000, activation='relu',
-        #                          # learning_rate_init=learning_rate_init,
-        #                         hidden_layer_sizes=(200, 200, 9))
+        # final_clf = MLPRegressor(random_state=1, max_iter=500, activation='relu',
+        #                          learning_rate_init=1e-04, learning_rate='adaptive',
+        #                          hidden_layer_sizes=(100, 100, 9))
 
         final_clf.fit(np_x_train, np_y_train)
         y_pred = final_clf.predict(np_x_test)
 
         y_pred_fixed = np.where(y_pred > 0.5, 1, 0)
 
-        accuracy_fixed = Utils.get_accuracy_score(np_y_test, y_pred_fixed)
-        print("Accuracy linear MLP with fixed threshold: {0}".format(accuracy_fixed))
+        total_acc = np.empty(9)
+        for i in range(9):
+            total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
+                                                    y_pred_fixed[:, i], normalized=False)
+        acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
+        print("Accuracy MLP: {0}".format(np.max(acc)))
 
     def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
-        # X = np.c_[np.ones(np.shape(np_x_train)[0]), np_x_train]
-        # x_t = X.T
-        # W = np.linalg.inv(x_t.dot(X)).dot(x_t).dot(np_y_train)
-        #
-        # x_t = np.c_[np.ones(np.shape(np_x_test)[0]), np_x_test]
-        # Y_pred = np.dot(x_t, W)
-
+        print("Linear Regression")
         Y_pred = np.empty((np.shape(np_y_test)[0], np.shape(np_y_test)[1]))
-        print(np.shape(Y_pred))
 
         for i in range(9):
             y = np_y_train[:, i]
@@ -109,27 +117,19 @@ class Regressor:
             y_pred = np_x_test @ W
             Y_pred[:, i] = y_pred
 
-        print(np.shape(Y_pred))
-        print(Y_pred)
-        print(np.shape(np_y_test))
-        print(np_y_test)
+        # print(np.shape(Y_pred))
+        # print(Y_pred)
+        # print(np.shape(np_y_test))
+        # print(np_y_test)
+        Y_pred = (Y_pred >= Y_pred.mean(axis=1, keepdims=1)).astype(float)
 
-        # threshold = np.arange(0, 1, 0.001)
-        #
-        # scores = [f1_score(np_y_test, self.to_labels(Y_pred, t), average="weighted")
-        #           for t in threshold]
-        # ix = np.argmax(scores)
-        #
-        # print(ix)
-        # print("Threshold: {0}, F1: {1}".format(threshold[ix], scores[ix]))
-        # Y_thrs = np.where(Y_pred < threshold[ix], 1, 0)
-        # print(Y_thrs)
-        #
-        # print(np_y_test[0])
+        total_acc = np.empty(9)
+        for i in range(9):
+            total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
+                                                    Y_pred[:, i], normalized=False)
 
-
-
-        print("Accuracy: {0}".format(Utils.get_accuracy_score(np_y_test, Y_pred)))
+        acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
+        print("Accuracy LR: {0}".format(acc))
 
     @staticmethod
     def to_labels(Y_pred, t):

@@ -12,6 +12,6 @@ class Utils:
         return sklearn.train_test_split(covariates_X, treatment_Y, train_size=split_size)
 
     @staticmethod
-    def get_accuracy_score(y_true, y_pred):
-        pred_accu = accuracy_score(y_true, y_pred, normalize=False)
+    def get_accuracy_score(y_true, y_pred, normalized=True):
+        pred_accu = accuracy_score(y_true, y_pred, normalize=normalized)
         return pred_accu
