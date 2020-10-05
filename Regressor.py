@@ -45,7 +45,7 @@ class Regressor:
                 # 'solver': ['adam', 'sgd'],
                 # 'alpha': [0.0001, 0.05],
                 # 'learning_rate': ['constant', 'adaptive', 'invscaling'],
-                'hidden_layer_sizes': [(100, 50, 25, 9)],
+                'hidden_layer_sizes': [(100, 50, 25, 9), (50, 40, 30, 20, 9)],
                 'activation': ['tanh', 'relu', 'sigmoid'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
                 'alpha': [0.0001, 0.05],
