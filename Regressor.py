@@ -37,7 +37,7 @@ class Regressor:
         # folds = KFold(n_splits=10, shuffle=True, random_state=1)
         param_grid = [
             {
-                # 'max_iter': [1000],
+                'max_iter': [1000],
                 # 'hidden_layer_sizes': [
                 #     (100, 50, 25, 9)
                 # ],
