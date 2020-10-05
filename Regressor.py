@@ -22,6 +22,8 @@ class Regressor:
 
         Y_pred = regressor.predict(np_x_test)
         Y_pred = np.where(Y_pred > 0.5, 1, 0)
+
+        #TO DO : Invoke confusion matrix
         total_acc = np.empty(9)
         for i in range(9):
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
@@ -35,18 +37,19 @@ class Regressor:
         # folds = KFold(n_splits=10, shuffle=True, random_state=1)
         param_grid = [
             {
-                'max_iter': [1000],
+                'max_iter': [1000, 1500],
                 'hidden_layer_sizes': [
-                    (200, 200, 9), (300, 300, 9), (300, 200, 200, 100, 9),(300, 200, 100, 9),
+                    (200, 200, 9), (300, 300, 9), (300, 200, 200, 100, 9), (100, 50, 25, 9),
                     (300, 300, 200, 100, 9)
-                ]
+                ],
+                'activation':['tanh','relu','sigmoid'],
+                'solver': ['adam', 'sgd'],
+                'alpha': [0.0001, 0.05],
+                'learning_rate': ['constant', 'adaptive', 'invscaling'],
             }
         ]
 
-        clf = GridSearchCV(MLPRegressor(random_state=1,
-                                        activation='relu',
-                                        solver='adam'),
-                           param_grid, cv=10)
+        clf = GridSearchCV(MLPRegressor(random_state=1), param_grid, cv=10)
         clf.fit(np_x_train, np_y_train)
         best_score = clf.best_score_
         print(best_score)
@@ -54,15 +57,19 @@ class Regressor:
         print(clf.best_params_)
 
         best_hyperparams = clf.best_params_
-        # learning_rate_init = best_hyperparams["learning_rate_init"]
+        best_solver = best_hyperparams["solver"]
+        best_learning_rate = best_hyperparams["learning_rate"]
         max_iter = best_hyperparams["max_iter"]
-        hidden_layer_sizes = best_hyperparams["hidden_layer_sizes"]
+        best_layer_size = best_hyperparams["hidden_layer_sizes"]
+        best_alpha = best_hyperparams["alpha"]
+        best_activation = best_hyperparams["activation"]
 
         final_clf = MLPRegressor(random_state=1,
-                                 max_iter=1000, activation='relu',
-                                 hidden_layer_sizes=hidden_layer_sizes,
-                                 learning_rate='adaptive',
-                                 solver='adam')
+                                 max_iter=max_iter, activation=best_activation,
+                                 hidden_layer_sizes=best_layer_size,
+                                 learning_rate=best_learning_rate,
+                                 solver=best_solver,
+                                 alpha=best_alpha)
 
         # final_clf = MLPRegressor(random_state=1, max_iter=1000, activation='relu',
         #                          # learning_rate_init=1e-04, learning_rate='adaptive',

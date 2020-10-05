@@ -34,7 +34,7 @@ class ML_Algo:
         startRegression = Regressor()
         print("---" * 20)
         print("1. Model: KNN")
-        startRegression.regression_using_knn(np_x_train, np_x_test, np_y_train, np_y_test)
+        #startRegression.regression_using_knn(np_x_train, np_x_test, np_y_train, np_y_test)
 
         print("---" * 20)
         print("2. Model: MLP")
