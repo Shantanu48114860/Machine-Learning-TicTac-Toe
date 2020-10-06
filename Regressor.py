@@ -39,11 +39,11 @@ class Regressor:
         param_grid = [
             {
                 'max_iter': [1000],
-                'hidden_layer_sizes': [(100, 50, 25, 9), (50, 40, 30, 20, 9)],
+                'hidden_layer_sizes': [(100, 50, 25, 9), (100, 50, 9)],
                 'activation': ['tanh', 'relu', 'sigmoid'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
-                'alpha': [0.0001, 0.05],
-                'learning_rate': ['constant', 'adaptive', 'invscaling'],
+                'alpha': [0.0001],
+                'learning_rate': ['constant'],
             }
         ]
 
@@ -62,7 +62,7 @@ class Regressor:
         best_alpha = best_hyperparams["alpha"]
         best_activation = best_hyperparams["activation"]
 
-        final_clf = MLPRegressor(random_state=1,
+        final_clf = MLPRegressor(random_state=20,
                                  max_iter=max_iter, activation=best_activation,
                                  hidden_layer_sizes=best_layer_size,
                                  learning_rate=best_learning_rate,
