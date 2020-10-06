@@ -93,10 +93,11 @@ class Regressor:
     def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
         print("Linear Regression")
         Y_pred = np.empty((np.shape(np_y_test)[0], np.shape(np_y_test)[1]))
-
+        bias = 1
         for i in range(9):
             y = np_y_train[:, i]
             W = np.linalg.inv(np_x_train.T @ np_x_train) @ np_x_train.T @ y
+            W = [weight + bias for weight in W]
             y_pred = np_x_test @ W
             Y_pred[:, i] = y_pred
 
