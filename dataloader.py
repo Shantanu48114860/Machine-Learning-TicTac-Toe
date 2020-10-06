@@ -31,6 +31,7 @@ class DataLoader:
 
         # data load
         np_arr = np.loadtxt(dataset_path)
+        np.random.shuffle(np_arr)
         np_X = np_arr[:, :9]
         np_Y = np_arr[:, 9:]
 
