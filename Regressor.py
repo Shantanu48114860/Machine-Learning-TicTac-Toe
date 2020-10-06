@@ -78,8 +78,8 @@ class Regressor:
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
                                                     y_pred_fixed[:, i], normalized=False)
 
-        acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
-        print("Accuracy MLP: {0}".format(np.max(acc)))
+        acc = np.sum(total_acc) / (np.shape(np_y_test)[0] * 9)
+        print("Accuracy MLP: {0}".format(np.max(acc) * 100))
 
         pickle.dump(final_clf, open(filename, 'wb'))
 
