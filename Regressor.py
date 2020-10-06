@@ -69,18 +69,15 @@ class Regressor:
                                  solver=best_solver,
                                  alpha=best_alpha)
 
-        # final_clf = MLPRegressor(random_state=1, max_iter=1000, activation='relu',
-        #                          # learning_rate_init=1e-04, learning_rate='adaptive',
-        #                          hidden_layer_sizes=(300, 300, 200, 100, 9))
-
         final_clf.fit(np_x_train, np_y_train)
         y_pred = final_clf.predict(np_x_test)
 
-        y_pred_fixed = np.where(y_pred >= 0.5, 1, 0)
+        y_pred_fixed = np.where(y_pred > 0.5, 1, 0)
         total_acc = np.empty(9)
         for i in range(9):
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
                                                     y_pred_fixed[:, i], normalized=False)
+
         acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
         print("Accuracy MLP: {0}".format(np.max(acc)))
 
