@@ -36,11 +36,10 @@ class ML_Algo:
         #print("1. Model: KNN")
         #startRegression.regression_using_knn(np_x_train, np_x_test, np_y_train, np_y_test)
 
-        #print("---" * 20)
-        #print("2. Model: MLP")
-        #startRegression.regression_using_mlp(np_x_train, np_x_test, np_y_train, np_y_test)
-
         print("---" * 20)
-        print("3. Model: Linear Regression")
-        startRegression.linear_reg(np_x_train, np_x_test,
-                                   np_y_train, np_y_test)
+        print("2. Model: MLP")
+        startRegression.regression_using_mlp(np_x_train, np_x_test, np_y_train, np_y_test)
+
+        #print("---" * 20)
+        #print("3. Model: Linear Regression")
+        #startRegression.linear_reg(np_x_train, np_x_test, np_y_train, np_y_test)

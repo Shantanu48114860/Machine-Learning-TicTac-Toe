@@ -1,8 +1,8 @@
 import numpy as np
+import pickle
 from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-
 from Utils import Utils
 
 
@@ -33,18 +33,12 @@ class Regressor:
         print("Accuracy knn: {0}".format(acc))
 
     def regression_using_mlp(self, np_x_train, np_x_test, np_y_train, np_y_test):
+        filename = 'model_params.pkl'
         print(" --->>> MLP Regression")
         # folds = KFold(n_splits=10, shuffle=True, random_state=1)
         param_grid = [
             {
                 'max_iter': [1000],
-                # 'hidden_layer_sizes': [
-                #     (100, 50, 25, 9)
-                # ],
-                # 'activation':['tanh','relu'],
-                # 'solver': ['adam', 'sgd'],
-                # 'alpha': [0.0001, 0.05],
-                # 'learning_rate': ['constant', 'adaptive', 'invscaling'],
                 'hidden_layer_sizes': [(100, 50, 25, 9), (50, 40, 30, 20, 9)],
                 'activation': ['tanh', 'relu', 'sigmoid'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
@@ -89,6 +83,8 @@ class Regressor:
                                                     y_pred_fixed[:, i], normalized=False)
         acc = np.sum(total_acc) / np.shape(np_y_test)[0] * 9
         print("Accuracy MLP: {0}".format(np.max(acc)))
+
+        pickle.dump(final_clf, open(filename, 'wb'))
 
     def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
         print("Linear Regression")
