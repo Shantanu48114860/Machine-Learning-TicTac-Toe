@@ -39,7 +39,7 @@ class Regressor:
         param_grid = [
             {
                 'max_iter': [1000],
-                'hidden_layer_sizes': [(200, 100, 75, 50, 25), (200, 100, 100, 50)],
+                'hidden_layer_sizes': [(200, 100, 100, 50), (300, 200, 100, 50)],
                 'activation': ['tanh', 'relu', 'sigmoid'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
                 'alpha': [0.0001],
