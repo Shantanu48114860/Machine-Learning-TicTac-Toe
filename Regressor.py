@@ -39,7 +39,7 @@ class Regressor:
         param_grid = [
             {
                 'max_iter': [1000],
-                'hidden_layer_sizes': [(100, 50, 25, 9), (100, 80, 60, 40, 9)],
+                'hidden_layer_sizes': [(300, 200, 100, 75, 50, 9),(100, 50, 25, 9), (200, 100, 50, 9)],
                 'activation': ['tanh', 'relu', 'sigmoid'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
                 'alpha': [0.0001],
@@ -76,7 +76,7 @@ class Regressor:
         final_clf.fit(np_x_train, np_y_train)
         y_pred = final_clf.predict(np_x_test)
 
-        y_pred_fixed = np.where(y_pred > 0.5, 1, 0)
+        y_pred_fixed = np.where(y_pred >= 0.5, 1, 0)
         total_acc = np.empty(9)
         for i in range(9):
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
