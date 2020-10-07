@@ -53,8 +53,8 @@ class Classifier:
                 ]
             }
         ]
-        clf = GridSearchCV(MLPClassifier(max_iter=100), param_grid, cv=folds,
-                           scoring='accuracy')
+        clf = GridSearchCV(MLPClassifier(max_iter=1000), param_grid, cv=folds,
+                           scoring='accuracy', n_jobs=-1)
         clf.fit(np_X_train, np_Y_train)
         best_score = clf.best_score_
         print("Best parameters set found on development set:")
@@ -88,7 +88,8 @@ class Classifier:
                                 scoring='accuracy',
                                 cv=folds,
                                 verbose=1,
-                                return_train_score=True)
+                                return_train_score=True,
+                                n_jobs=-1)
 
         model_cv.fit(np_X_train, np_Y_train)
         best_score = model_cv.best_score_
@@ -111,7 +112,7 @@ class Classifier:
     def classify_using_knn(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
         print("Knn classifier")
         param_grid = {"n_neighbors": np.arange(1, 100, 2)}
-        knn_gscv = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+        knn_gscv = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10, n_jobs=-1)
         knn_gscv.fit(np_X_train, np_Y_train)
 
         best_hyperparams = knn_gscv.best_params_
