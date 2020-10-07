@@ -169,8 +169,8 @@ if __name__ == '__main__':
     split_size = 0.8
     execute_classifier(final_dataset_path, split_size)
 
-    print("####" * 20)
-    print("--> Single class classification move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_single.txt"
-    split_size = 0.8
-    execute_classifier(final_dataset_path, split_size)
+    # print("####" * 20)
+    # print("--> Single class classification move dataset: <--")
+    # final_dataset_path = "datasets-part1/tictac_single.txt"
+    # split_size = 0.8
+    # execute_classifier(final_dataset_path, split_size)
