@@ -13,4 +13,3 @@ if __name__ == '__main__':
     split_size = 0.8
     ML_Algo.execute_classifier(final_dataset_path, split_size)
 
-
