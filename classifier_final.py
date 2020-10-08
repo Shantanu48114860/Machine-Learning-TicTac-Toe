@@ -29,16 +29,16 @@ class DataLoader:
         np_x = np_arr[:, :9]
         np_y = np_arr[:, 9]
 
-        print("ps_np_X: {0}".format(np_x.shape))
-        print("ps_np_Y: {0}".format(np_y.shape))
+        # print("ps_np_X: {0}".format(np_x.shape))
+        # print("ps_np_Y: {0}".format(np_y.shape))
         np_x_train, np_x_test, np_y_train, np_y_test = \
             Utils.test_train_split(np_x, np_y, split_size)
 
-        print("np_X_train: {0}".format(np_x_train.shape))
-        print("np_Y_train: {0}".format(np_y_train.shape))
-
-        print("np_X_test: {0}".format(np_x_test.shape))
-        print("np_Y_test: {0}".format(np_y_test.shape))
+        # print("np_X_train: {0}".format(np_x_train.shape))
+        # print("np_Y_train: {0}".format(np_y_train.shape))
+        #
+        # print("np_X_test: {0}".format(np_x_test.shape))
+        # print("np_Y_test: {0}".format(np_y_test.shape))
 
         return np_x_train, np_x_test, np_y_train, np_y_test
 
