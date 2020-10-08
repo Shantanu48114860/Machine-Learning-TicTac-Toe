@@ -231,34 +231,3 @@ def execute_classifier(final_dataset_path, split_size, title, k_range, fraction_
     classifier.classify_using_MLP(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "MLP",
                                   fraction_10th)
 
-
-if __name__ == '__main__':
-    print("--> Final move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_final.txt"
-    split_size = 0.8
-    execute_classifier(final_dataset_path, split_size, "Final move dataset - ",
-                       k_range=100, fraction_10th=False)
-    print("---" * 20)
-    print("####" * 20)
-    print("---" * 20)
-    print("--> Single class classification move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_single.txt"
-    split_size = 0.8
-    execute_classifier(final_dataset_path, split_size, "Single Classifier dataset - ",
-                       k_range=100,fraction_10th=False)
-
-    print("---" * 20)
-    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-    print("---" * 20)
-    print("--> 0.10 Fraction - Final move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_final.txt"
-    split_size = 0.8
-    execute_classifier(final_dataset_path, split_size, "Final move dataset(10_th_Fraction) - ",
-                       k_range=10, fraction_10th=True)
-
-    print("####" * 20)
-    print("--> 0.10 Fraction - Single class classification move dataset: <--")
-    final_dataset_path = "datasets-part1/tictac_single.txt"
-    split_size = 0.8
-    execute_classifier(final_dataset_path, split_size, "Single Classifier dataset(10_th_Fraction) - ",
-                       k_range=10, fraction_10th=True)

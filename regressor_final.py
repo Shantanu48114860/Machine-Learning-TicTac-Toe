@@ -199,9 +199,3 @@ def execute_regressor(final_dataset_path, split_size):
     print("---" * 20)
     print("3. Model: Linear Regression")
     startRegression.linear_reg(np_x_train, np_x_test, np_y_train, np_y_test)
-
-
-if __name__ == '__main__':
-    final_multi_dataset_path = "datasets-part1/tictac_multi.txt"
-    split_size = 0.8
-    execute_regressor(final_multi_dataset_path, split_size)
