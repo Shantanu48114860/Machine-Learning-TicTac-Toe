@@ -169,13 +169,13 @@ class Classifier:
     def classify_using_knn(self, np_X_train, np_X_test, np_Y_train, np_Y_test, fig_title,
                            k_range, fraction_10th):
         print("Knn classifier")
-        param_grid = {"n_neighbors": np.arange(1, k_range, 2)}
+        param_grid = {"n_neighbors": np.arange(3, k_range, 2)}
         knn_gscv = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10, n_jobs=-1)
         knn_gscv.fit(np_X_train, np_Y_train)
 
         best_hyperparams = knn_gscv.best_params_
         optimal_k = best_hyperparams["n_neighbors"]
-        k_ = np.arange(1, k_range, 2)
+        k_ = np.arange(3, k_range, 2)
 
         scores = knn_gscv.cv_results_['mean_test_score']
 
