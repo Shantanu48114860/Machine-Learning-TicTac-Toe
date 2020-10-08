@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
 # from mlxtend.plotting import plot_confusion_matrix
-from mlxtend.plotting import plot_confusion_matrix
+# from mlxtend.plotting import plot_confusion_matrix
 from sklearn import svm
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold
