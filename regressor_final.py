@@ -182,7 +182,7 @@ class Regressor:
         return (Y_pred >= t).astype("int")
 
 
-def multiclass_regression(final_dataset_path, split_size):
+def execute_regressor(final_dataset_path, split_size):
     dL = DataLoader()
     np_x_train, np_x_test, np_y_train, np_y_test = \
         dL.preprocess_data_from_csv_multi(final_dataset_path, split_size)
@@ -204,4 +204,4 @@ def multiclass_regression(final_dataset_path, split_size):
 if __name__ == '__main__':
     final_multi_dataset_path = "datasets-part1/tictac_multi.txt"
     split_size = 0.8
-    multiclass_regression(final_multi_dataset_path, split_size)
+    execute_regressor(final_multi_dataset_path, split_size)
