@@ -1,10 +1,13 @@
+import pickle
+
+import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-import pickle
+
 
 class DataLoader:
     @staticmethod
@@ -63,6 +66,16 @@ class Utils:
         pred_accu = accuracy_score(y_true, y_pred, normalize=normalized)
         return pred_accu
 
+    @staticmethod
+    def plot_knn_accuracy(k_list, knn_score, title):
+        plt.title(title)
+        plt.plot(k_list, knn_score)
+        plt.xlabel("Value of K for KNN")
+        plt.ylabel('Validation Accuracy')
+        plt.draw()
+        plt.savefig("./Plots/" + title, dpi=220)
+        plt.clf()
+
 
 class Regressor:
     def regression_using_knn(self, np_x_train, np_x_test, np_y_train, np_y_test):
@@ -73,7 +86,7 @@ class Regressor:
 
         best_hyperparams = knn_gscv.best_params_
         optimal_k = best_hyperparams["n_neighbors"]
-        print(optimal_k)
+        print("Optimal: " + str(optimal_k))
 
         regressor = KNeighborsRegressor(n_neighbors=optimal_k)
         regressor.fit(np_x_train, np_y_train)
@@ -86,8 +99,8 @@ class Regressor:
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
                                                     Y_pred[:, i], normalized=False)
 
-        print(total_acc)
-        print(np.shape(np_y_test)[0])
+        # print(total_acc)
+        # print(np.shape(np_y_test)[0])
 
         acc = np.sum(total_acc) / (np.shape(np_y_test)[0] * 9)
         print("Accuracy knn: {0}".format(acc))
@@ -138,8 +151,6 @@ class Regressor:
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
                                                     y_pred_fixed[:, i], normalized=False)
 
-        print(total_acc)
-        print(np.shape(np_y_test)[0])
         acc = np.sum(total_acc) / (np.shape(np_y_test)[0] * 9)
         print("Accuracy MLP: {0}".format(acc))
 
@@ -162,9 +173,6 @@ class Regressor:
         for i in range(9):
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
                                                     Y_pred[:, i], normalized=False)
-
-        print(total_acc)
-        print(np.shape(np_y_test)[0])
 
         acc = np.sum(total_acc) / (np.shape(np_y_test)[0] * 9)
         print("Accuracy LR: {0}".format(acc))
