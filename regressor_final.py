@@ -113,7 +113,7 @@ class Regressor:
             {
                 'max_iter': [1000],
                 'hidden_layer_sizes': [(200, 100, 100, 50), (200, 100, 50)],
-                'activation': ['tanh', 'relu', 'sigmoid'],
+                'activation': ['tanh', 'relu'],
                 'solver': ['adam', 'lbfgs', 'sgd'],
                 'alpha': [0.0001],
                 'learning_rate': ['constant'],
