@@ -1,6 +1,6 @@
 import numpy as np
 import sklearn.model_selection as sklearn
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix
 import matplotlib.pyplot as plt
 from sklearn import svm
 from sklearn.model_selection import GridSearchCV, KFold
@@ -71,6 +71,13 @@ class Classifier:
         final_clf.fit(np_X_train, np_Y_train)
         y_pred = self.test_knn(np_X_test, final_clf)
 
+        confusion_matrix(np_Y_test, y_pred)
+        disp = plot_confusion_matrix(final_clf, np_X_test, np_Y_test)
+        disp.ax_.set_title("Normalized Confusion Matrix")
+        print(disp.confusion_matrix)
+        plt.show()
+
+
         print("Accuracy linear MLP: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
     def classify_using_lin_SVM(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
@@ -102,12 +109,27 @@ class Classifier:
         clf = svm.SVC(kernel="linear", gamma=gamma, C=C)
         clf.fit(np_X_train, np_Y_train)
         y_pred = self.test_knn(np_X_test, clf)
+
+        confusion_matrix(np_Y_test, y_pred)
+        disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
+        disp.ax_.set_title("Normalized Confusion Matrix")
+        print(disp.confusion_matrix)
+        plt.show()
+
+
         print("Accuracy linear SVM: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
-        clf = svm.SVC(kernel="rbf", gamma=gamma, C=C)
-        clf.fit(np_X_train, np_Y_train)
-        y_pred = self.test_knn(np_X_test, clf)
-        print("Accuracy rbf SVM: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
+        # clf = svm.SVC(kernel="rbf", gamma=gamma, C=C)
+        # clf.fit(np_X_train, np_Y_train)
+        # y_pred = self.test_knn(np_X_test, clf)
+        #
+        # confusion_matrix(np_Y_test, y_pred)
+        # disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
+        # disp.ax_.set_title("Normalized Confusion Matrix")
+        # print(disp.confusion_matrix)
+        # plt.show()
+        #
+        # print("Accuracy rbf SVM: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
     def classify_using_knn(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
         print("Knn classifier")
@@ -125,6 +147,12 @@ class Classifier:
         Y_pred = clf.predict(np_X_test)
         acc = Utils.get_accuracy_score(np_Y_test, Y_pred)
         print(acc)
+
+        confusion_matrix(np_Y_test, Y_pred)
+        disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
+        disp.ax_.set_title("Normalized Confusion Matrix")
+        print(disp.confusion_matrix)
+        plt.show()
 
     @staticmethod
     def test_knn(X_test, classifier):
