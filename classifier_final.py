@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
 # from mlxtend.plotting import plot_confusion_matrix
+from mlxtend.plotting import plot_confusion_matrix
 from sklearn import svm
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold
@@ -53,16 +54,17 @@ class Utils:
         return pred_accu
 
     @staticmethod
-    def plot_confusion_matrix(confusion_matrix, fig_title):
+    def plot_confusion_matrix(confusion_mat, fig_title):
+        c = confusion_mat / confusion_mat.astype(np.float).sum(axis=1)
         print("Confusion Matrix:")
-        print(confusion_matrix)
-        # fig, ax = plot_confusion_matrix(conf_mat=confusion_matrix,
+        print(c)
+        # fig, ax = plot_confusion_matrix(conf_mat=confusion_mat,
         #                                 show_absolute=True,
         #                                 show_normed=True,
         #                                 colorbar=True)
         # plt.title(label=fig_title)
         # plt.draw()
-        # plt.show()
+        # # plt.show()
         # plt.savefig("./Plots/" + fig_title, dpi=220)
         # plt.clf()
 
