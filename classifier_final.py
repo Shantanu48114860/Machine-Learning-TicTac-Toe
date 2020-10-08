@@ -1,8 +1,9 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
-from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix
-import matplotlib.pyplot as plt
+from mlxtend.plotting import plot_confusion_matrix
 from sklearn import svm
+from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
@@ -10,25 +11,36 @@ from sklearn.neural_network import MLPClassifier
 
 class DataLoader:
     @staticmethod
-    def preprocess_data_from_csv(dataset_path, split_size):
+    def preprocess_data_from_csv(dataset_path, split_size, fraction_10th):
         print(".. Data Loading ..")
 
         # data load
         np_arr = np.loadtxt(dataset_path)
+        if fraction_10th:
+            size_10th = int(np.round(np_arr.shape[0] / 10))
+            random_indices = np.random.choice(np_arr.shape[0], size=size_10th, replace=False)
+            # print("Size:" + str(random_indices))
+            np_arr = np_arr[random_indices, :]
+            print(np_arr.shape)
+
+            # np_arr = np_arr[:size_10th, :]
+
         np_x = np_arr[:, :9]
         np_y = np_arr[:, 9]
-        print("ps_np_covariates_X: {0}".format(np_x.shape))
-        print("ps_np_treatment_Y: {0}".format(np_y.shape))
 
+        print("ps_np_X: {0}".format(np_x.shape))
+        print("ps_np_Y: {0}".format(np_y.shape))
         np_x_train, np_x_test, np_y_train, np_y_test = \
             Utils.test_train_split(np_x, np_y, split_size)
-        print("np_covariates_X_train: {0}".format(np_x_train.shape))
-        print("np_covariates_Y_train: {0}".format(np_y_train.shape))
 
-        print("np_covariates_X_test: {0}".format(np_x_test.shape))
-        print("np_covariates_Y_test: {0}".format(np_y_test.shape))
+        print("np_X_train: {0}".format(np_x_train.shape))
+        print("np_Y_train: {0}".format(np_y_train.shape))
+
+        print("np_X_test: {0}".format(np_x_test.shape))
+        print("np_Y_test: {0}".format(np_y_test.shape))
 
         return np_x_train, np_x_test, np_y_train, np_y_test
+
 
 class Utils:
     @staticmethod
@@ -40,11 +52,22 @@ class Utils:
         pred_accu = accuracy_score(y_true, y_pred, normalize=normalized)
         return pred_accu
 
+    @staticmethod
+    def plot_confusion_matrix(confusion_matrix, fig_title):
+        fig, ax = plot_confusion_matrix(conf_mat=confusion_matrix,
+                                        show_absolute=True,
+                                        show_normed=True,
+                                        colorbar=True)
+        plt.title(label=fig_title)
+        plt.draw()
+        plt.savefig("./Plots/" + fig_title, dpi=220)
+        plt.clf()
+
 
 class Classifier:
-    def classify_using_MLP(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
+    def classify_using_MLP(self, np_X_train, np_X_test, np_Y_train, np_Y_test, fig_title,
+                           fraction_10th):
         folds = KFold(n_splits=10, shuffle=True, random_state=10)
-
         param_grid = [
             {
                 'activation': ['relu'],
@@ -71,16 +94,17 @@ class Classifier:
         final_clf.fit(np_X_train, np_Y_train)
         y_pred = self.test_knn(np_X_test, final_clf)
 
-        confusion_matrix(np_Y_test, y_pred)
-        disp = plot_confusion_matrix(final_clf, np_X_test, np_Y_test)
-        disp.ax_.set_title("Normalized Confusion Matrix")
-        print(disp.confusion_matrix)
-        plt.show()
+        confusion_mat = confusion_matrix(np_Y_test, y_pred)
+        Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
+        # if not fraction_10th:
+        #     confusion_mat = confusion_matrix(np_Y_test, y_pred)
+        #     Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
         print("Accuracy linear MLP: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
-    def classify_using_lin_SVM(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
+    def classify_using_lin_SVM(self, np_X_train, np_X_test, np_Y_train, np_Y_test, fig_title,
+                               fraction_10th):
         folds = KFold(n_splits=10, shuffle=True, random_state=10)
 
         hyper_params = [{'gamma': [1, 0.1, 0.5],
@@ -110,49 +134,39 @@ class Classifier:
         clf.fit(np_X_train, np_Y_train)
         y_pred = self.test_knn(np_X_test, clf)
 
-        confusion_matrix(np_Y_test, y_pred)
-        disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
-        disp.ax_.set_title("Normalized Confusion Matrix")
-        print(disp.confusion_matrix)
-        plt.show()
+        confusion_mat = confusion_matrix(np_Y_test, y_pred)
+        Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
+        # if not fraction_10th:
+        #     confusion_mat = confusion_matrix(np_Y_test, y_pred)
+        #     Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
         print("Accuracy linear SVM: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
-        # clf = svm.SVC(kernel="rbf", gamma=gamma, C=C)
-        # clf.fit(np_X_train, np_Y_train)
-        # y_pred = self.test_knn(np_X_test, clf)
-        #
-        # confusion_matrix(np_Y_test, y_pred)
-        # disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
-        # disp.ax_.set_title("Normalized Confusion Matrix")
-        # print(disp.confusion_matrix)
-        # plt.show()
-        #
-        # print("Accuracy rbf SVM: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
-
-    def classify_using_knn(self, np_X_train, np_X_test, np_Y_train, np_Y_test):
+    def classify_using_knn(self, np_X_train, np_X_test, np_Y_train, np_Y_test, fig_title,
+                           k_range, fraction_10th):
         print("Knn classifier")
-        param_grid = {"n_neighbors": np.arange(1, 100, 2)}
+        param_grid = {"n_neighbors": np.arange(1, k_range, 2)}
         knn_gscv = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10, n_jobs=-1)
         knn_gscv.fit(np_X_train, np_Y_train)
 
         best_hyperparams = knn_gscv.best_params_
         optimal_k = best_hyperparams["n_neighbors"]
-        print(optimal_k)
+        print("optimal:" + str(optimal_k))
 
         clf = KNeighborsClassifier(n_neighbors=optimal_k)
         clf.fit(np_X_train, np_Y_train)
 
         Y_pred = clf.predict(np_X_test)
         acc = Utils.get_accuracy_score(np_Y_test, Y_pred)
-        print(acc)
+        print("Accuracy Knn: {0}".format(acc))
 
-        confusion_matrix(np_Y_test, Y_pred)
-        disp = plot_confusion_matrix(clf, np_X_test, np_Y_test)
-        disp.ax_.set_title("Normalized Confusion Matrix")
-        print(disp.confusion_matrix)
-        plt.show()
+        confusion_mat = confusion_matrix(np_Y_test, Y_pred)
+        Utils.plot_confusion_matrix(confusion_mat, fig_title)
+
+        # if not fraction_10th:
+        #     confusion_mat = confusion_matrix(np_Y_test, Y_pred)
+        #     Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
     @staticmethod
     def test_knn(X_test, classifier):
@@ -170,35 +184,57 @@ class Classifier:
         plt.clf()
 
 
-def execute_classifier(final_dataset_path, split_size):
+def execute_classifier(final_dataset_path, split_size, title, k_range, fraction_10th=False):
     dL = DataLoader()
 
     np_x_train, np_x_test, np_Y_train, np_Y_test = \
-        dL.preprocess_data_from_csv(final_dataset_path, split_size)
+        dL.preprocess_data_from_csv(final_dataset_path, split_size, fraction_10th)
 
     classifier = Classifier()
 
     print("---" * 20)
     print("1. Model: KNN")
-    classifier.classify_using_knn(np_x_train, np_x_test, np_Y_train, np_Y_test)
+    classifier.classify_using_knn(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "Knn",
+                                  k_range, fraction_10th)
 
     print("---" * 20)
     print("2. Model: SVM")
-    classifier.classify_using_lin_SVM(np_x_train, np_x_test, np_Y_train, np_Y_test)
+    classifier.classify_using_lin_SVM(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "SVM",
+                                      fraction_10th)
 
     print("---" * 20)
     print("3. Model: MLP")
-    classifier.classify_using_MLP(np_x_train, np_x_test, np_Y_train, np_Y_test)
+    classifier.classify_using_MLP(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "MLP",
+                                  fraction_10th)
 
 
 if __name__ == '__main__':
     print("--> Final move dataset: <--")
     final_dataset_path = "datasets-part1/tictac_final.txt"
     split_size = 0.8
-    execute_classifier(final_dataset_path, split_size)
+    execute_classifier(final_dataset_path, split_size, "Final move dataset - ",
+                       k_range=100,fraction_10th=False)
+    print("---" * 20)
+    print("####" * 20)
+    print("---" * 20)
+    print("--> Single class classification move dataset: <--")
+    final_dataset_path = "datasets-part1/tictac_single.txt"
+    split_size = 0.8
+    execute_classifier(final_dataset_path, split_size, "Single Classifier dataset - ",
+                       k_range=100,fraction_10th=False)
 
-    # print("####" * 20)
-    # print("--> Single class classification move dataset: <--")
-    # final_dataset_path = "datasets-part1/tictac_single.txt"
-    # split_size = 0.8
-    # execute_classifier(final_dataset_path, split_size)
+    print("---" * 20)
+    print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
+    print("---" * 20)
+    print("--> 0.10 Fraction - Final move dataset: <--")
+    final_dataset_path = "datasets-part1/tictac_final.txt"
+    split_size = 0.8
+    execute_classifier(final_dataset_path, split_size, "Final move dataset(10_th_Fraction) - ",
+                       k_range=10, fraction_10th=True)
+
+    print("####" * 20)
+    print("--> 0.10 Fraction - Single class classification move dataset: <--")
+    final_dataset_path = "datasets-part1/tictac_single.txt"
+    split_size = 0.8
+    execute_classifier(final_dataset_path, split_size, "Single Classifier dataset(10_th_Fraction) - ",
+                       k_range=10, fraction_10th=True)
