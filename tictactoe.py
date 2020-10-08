@@ -3,7 +3,7 @@ import pickle
 import itertools
 
 
-def fin(current_game):
+def is_finished(current_game):
     def all_same(l):
         if l.count(l[0]) == len(l) and l[0] != "-":
             return True
@@ -52,7 +52,7 @@ def fin(current_game):
 def game_board(game_map, player=0, row=0, column=0, just_display=False):
     try:
         if game_map[row][column] != "-":
-            print("This position is occupado! Choose another!")
+            print("This position is occupied! Choose another!")
             return game_map, False
         print("   " + " ".join([str(i) + "   " for i in range(len(game))]))
 
@@ -78,13 +78,13 @@ def game_board(game_map, player=0, row=0, column=0, just_display=False):
 if __name__ == '__main__':
     print("Let's play a classic 3x3 tic tac toe.")
     print("You play with 'X' and the AI plays with 'O'")
+
     first_player = input("Do you want to go first?? [Y/N]: ")
     game_size = 3
     number_of_players = 2
     played_idx = [False for i in range(game_size * game_size)]
 
     game = [["-" for i in range(game_size)] for i in range(game_size)]
-    # print(game)
 
     players = ["human"]
     if first_player.lower() == 'y':
@@ -141,13 +141,6 @@ if __name__ == '__main__':
                 played_idx[ai_move_idx] = True
                 game, played = game_board(game, current_player, ai_move_idx_row, ai_move_idx_col)
 
-            if fin(game):
+            if is_finished(game):
                 game_fin = True
-                again = input("The game is over, would you like to play again? (y/n) ")
-
-                if again.lower() == "y":
-                    print("Restarting...")
-
-                else:
-                    print("Byeeeeeee")
-                    play = False
+                print("The game is over.")

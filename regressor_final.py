@@ -4,7 +4,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsRegressor
 from sklearn.neural_network import MLPRegressor
-
+import pickle
 
 class DataLoader:
     @staticmethod
@@ -81,7 +81,6 @@ class Regressor:
         Y_pred = regressor.predict(np_x_test)
         Y_pred = np.where(Y_pred > 0.5, 1, 0)
 
-        # TO DO : Invoke confusion matrix
         total_acc = np.empty(9)
         for i in range(9):
             total_acc[i] = Utils.get_accuracy_score(np_y_test[:, i],
@@ -130,10 +129,6 @@ class Regressor:
                                  solver=best_solver,
                                  alpha=best_alpha)
 
-        # final_clf = MLPRegressor(random_state=20,
-        #                          max_iter=100,
-        #                          hidden_layer_sizes=(100, 100))
-
         final_clf.fit(np_x_train, np_y_train)
         y_pred = final_clf.predict(np_x_test)
 
@@ -148,7 +143,7 @@ class Regressor:
         acc = np.sum(total_acc) / (np.shape(np_y_test)[0] * 9)
         print("Accuracy MLP: {0}".format(acc))
 
-        # pickle.dump(final_clf, open(filename, 'wb'))
+        pickle.dump(final_clf, open(filename, 'wb'))
 
     def linear_reg(self, np_x_train, np_x_test, np_y_train, np_y_test):
         print("Linear Regression")
