@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
-from mlxtend.plotting import plot_confusion_matrix
+# from mlxtend.plotting import plot_confusion_matrix
 from sklearn import svm
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold
@@ -56,15 +56,15 @@ class Utils:
     def plot_confusion_matrix(confusion_matrix, fig_title):
         print("Confusion Matrix:")
         print(confusion_matrix)
-        fig, ax = plot_confusion_matrix(conf_mat=confusion_matrix,
-                                        show_absolute=True,
-                                        show_normed=True,
-                                        colorbar=True)
-        plt.title(label=fig_title)
-        plt.draw()
-        plt.show()
-        plt.savefig("./Plots/" + fig_title, dpi=220)
-        plt.clf()
+        # fig, ax = plot_confusion_matrix(conf_mat=confusion_matrix,
+        #                                 show_absolute=True,
+        #                                 show_normed=True,
+        #                                 colorbar=True)
+        # plt.title(label=fig_title)
+        # plt.draw()
+        # plt.show()
+        # plt.savefig("./Plots/" + fig_title, dpi=220)
+        # plt.clf()
 
 
     @staticmethod
@@ -183,7 +183,7 @@ class Classifier:
         Y_pred = clf.predict(np_X_test)
         acc = Utils.get_accuracy_score(np_Y_test, Y_pred)
         print("Accuracy Knn: {0}".format(acc))
-        # Utils.plot_knn_accuracy(k_, scores, fig_title + " (knn_Plot)")
+        Utils.plot_knn_accuracy(k_, scores, fig_title + " (knn_Plot)")
 
         confusion_mat = confusion_matrix(np_Y_test, Y_pred)
         Utils.plot_confusion_matrix(confusion_mat, fig_title)
