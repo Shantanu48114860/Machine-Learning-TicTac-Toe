@@ -1,3 +1,6 @@
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
+
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn.model_selection as sklearn
@@ -8,7 +11,8 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import GridSearchCV, KFold
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
-
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 class DataLoader:
     @staticmethod
@@ -120,7 +124,7 @@ class Classifier:
         #     confusion_mat = confusion_matrix(np_Y_test, y_pred)
         #     Utils.plot_confusion_matrix(confusion_mat, fig_title)
 
-        print("Accuracy linear MLP: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
+        print("Accuracy MLP: {0}".format(Utils.get_accuracy_score(np_Y_test, y_pred)))
 
     def classify_using_lin_SVM(self, np_X_train, np_X_test, np_Y_train, np_Y_test, fig_title,
                                fraction_10th):

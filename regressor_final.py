@@ -1,4 +1,6 @@
 import pickle
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 import matplotlib.pyplot as plt
 import numpy as np
