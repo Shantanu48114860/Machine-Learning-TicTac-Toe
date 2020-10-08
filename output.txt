@@ -1,0 +1,23 @@
+.. Data Loading ..
+ps_np_covariates_X: (6551, 9)
+ps_np_treatment_Y: (6551, 9)
+np_covariates_X_train: (5240, 9)
+np_covariates_Y_train: (5240, 9)
+np_covariates_X_test: (1311, 9)
+np_covariates_Y_test: (1311, 9)
+------------------------------------------------------------
+1. Model: KNN
+Knn Regression
+Optimal: 3
+Accuracy knn: 0.9064327485380117
+------------------------------------------------------------
+2. Model: MLP
+ --->>> MLP Regression
+0.8565807530968677
+Best parameters set found on development set:
+{'activation': 'tanh', 'alpha': 0.0001, 'hidden_layer_sizes': (200, 100, 100, 50), 'learning_rate': 'constant', 'max_iter': 1000, 'solver': 'lbfgs'}
+Accuracy MLP: 0.9761844224086788
+------------------------------------------------------------
+3. Model: Linear Regression
+Linear Regression
+Accuracy LR: 0.7263327400627172
