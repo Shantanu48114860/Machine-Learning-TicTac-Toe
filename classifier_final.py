@@ -54,13 +54,27 @@ class Utils:
 
     @staticmethod
     def plot_confusion_matrix(confusion_matrix, fig_title):
+        print("Confusion Matrix:")
+        print(confusion_matrix)
         fig, ax = plot_confusion_matrix(conf_mat=confusion_matrix,
                                         show_absolute=True,
                                         show_normed=True,
                                         colorbar=True)
         plt.title(label=fig_title)
         plt.draw()
+        plt.show()
         plt.savefig("./Plots/" + fig_title, dpi=220)
+        plt.clf()
+
+
+    @staticmethod
+    def plot_knn_accuracy(k_list, knn_score, title):
+        plt.title(title)
+        plt.plot(k_list, knn_score)
+        plt.xlabel("Value of K for KNN")
+        plt.ylabel('Validation Accuracy')
+        plt.draw()
+        plt.savefig("./Plots/" + title, dpi=220)
         plt.clf()
 
 
@@ -88,6 +102,9 @@ class Classifier:
               .format(best_score, best_hyperparams))
         activation = best_hyperparams['activation']
         hidden_layer_sizes = best_hyperparams['hidden_layer_sizes']
+
+        # print(clf.cv_results_['params'])
+        # print(clf.cv_results_['mean_test_score'])
 
         final_clf = MLPClassifier(max_iter=100, activation=activation,
                                   hidden_layer_sizes=hidden_layer_sizes)
@@ -127,6 +144,10 @@ class Classifier:
         best_hyperparams = model_cv.best_params_
         gamma = best_hyperparams['gamma']
         C = best_hyperparams['C']
+
+        # print(model_cv.cv_results_['params'])
+        # print(model_cv.cv_results_['mean_test_score'])
+
         print("The best test score is {0} corresponding to hyperparameters {1}"
               .format(best_score, best_hyperparams))
 
@@ -152,7 +173,9 @@ class Classifier:
 
         best_hyperparams = knn_gscv.best_params_
         optimal_k = best_hyperparams["n_neighbors"]
-        print("optimal:" + str(optimal_k))
+        k_ = np.arange(1, k_range, 2)
+
+        scores = knn_gscv.cv_results_['mean_test_score']
 
         clf = KNeighborsClassifier(n_neighbors=optimal_k)
         clf.fit(np_X_train, np_Y_train)
@@ -160,6 +183,7 @@ class Classifier:
         Y_pred = clf.predict(np_X_test)
         acc = Utils.get_accuracy_score(np_Y_test, Y_pred)
         print("Accuracy Knn: {0}".format(acc))
+        # Utils.plot_knn_accuracy(k_, scores, fig_title + " (knn_Plot)")
 
         confusion_mat = confusion_matrix(np_Y_test, Y_pred)
         Utils.plot_confusion_matrix(confusion_mat, fig_title)
@@ -202,7 +226,7 @@ def execute_classifier(final_dataset_path, split_size, title, k_range, fraction_
     classifier.classify_using_lin_SVM(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "SVM",
                                       fraction_10th)
 
-    print("---" * 20)
+    # print("---" * 20)
     print("3. Model: MLP")
     classifier.classify_using_MLP(np_x_train, np_x_test, np_Y_train, np_Y_test, title + "MLP",
                                   fraction_10th)
@@ -213,7 +237,7 @@ if __name__ == '__main__':
     final_dataset_path = "datasets-part1/tictac_final.txt"
     split_size = 0.8
     execute_classifier(final_dataset_path, split_size, "Final move dataset - ",
-                       k_range=100,fraction_10th=False)
+                       k_range=100, fraction_10th=False)
     print("---" * 20)
     print("####" * 20)
     print("---" * 20)
