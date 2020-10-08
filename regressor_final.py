@@ -125,7 +125,7 @@ class Regressor:
         clf = GridSearchCV(MLPRegressor(random_state=1), param_grid, cv=10, n_jobs=-1)
         clf.fit(np_x_train, np_y_train)
         best_score = clf.best_score_
-        print(best_score)
+        # print(best_score)
         print("Best parameters set found on development set:")
         print(clf.best_params_)
 
