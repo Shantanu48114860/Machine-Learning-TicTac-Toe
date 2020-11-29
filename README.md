@@ -9,4 +9,4 @@ A comparative study of the performance has been attached in the project report.
 The Problem statement will be found at here()[]
 
 # Report
-Please visit (here)[https://github.com/Shantanu48114860/Machine-Learning-TicTac-Toe/blob/master/DL_project1.pdf]
+Please visit [here](https://github.com/Shantanu48114860/Machine-Learning-TicTac-Toe/blob/master/DL_project1.pdf)
